@@ -24,11 +24,11 @@ def CORDIC(theta):
     y = v.y * K
 
     atan_calc = atan_calculation(i)
-    for iation in range(i):
+    for i in range(i):
         shift = 1 if theta >= 0 else -1
-        xn = x - shift * y * (2 ** -iation)
-        yn = y + shift * x * (2 ** -iation)
-        theta_n = theta - shift * atan_calc[iation]
+        xn = x - shift * y * (2 ** -i)
+        yn = y + shift * x * (2 ** -i)
+        theta_n = theta - shift * atan_calc[i]
         x, y, theta = xn, yn, theta_n
     return x, y
 
