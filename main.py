@@ -39,8 +39,7 @@ def exit():
 def main(RED, GREEN, RESET):
     try:
         input_theta = input("pi / ") 
-        if input_theta == 'exit': exit()
-        if input_theta == 0 : raise
+        if input_theta == 'exit': exit()    
         theta = pi / int(input_theta)
         cosine_theta, sine_theta = CORDIC(theta)
 
