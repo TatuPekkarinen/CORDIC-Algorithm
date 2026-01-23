@@ -38,12 +38,11 @@ def exit():
 
 def main(RED, GREEN, RESET):
     try:
-        input_theta = input("pi / ") 
-        if input_theta == 'exit': exit()   
-        if input_theta == 0: 
-            print(f"{RED}\nCan't Divide By Zero\n{RESET}")
-            return
-        theta = pi / int(input_theta)
+        theta_i = int(input("INPUT pi / "))
+        if theta_i == 0:
+            print(f"{RED}\nInvalid Value\n{RESET}")
+            exit()
+        theta = pi / int(theta_i)
         cosine_theta, sine_theta = CORDIC(theta)
 
         print(f"{GREEN}CORDIC Algorithm Values{RESET}")
