@@ -38,7 +38,7 @@ def quit_program():
 
 def main(RED, GREEN, RESET):
     try:
-        theta_degrees = float(input("Enter angle in degrees: "))
+        theta_degrees = float(input("Enter Angle In Degrees: "))
         theta = theta_degrees * pi / 180
         theta = ((theta + pi) % (2 * pi)) - pi
         cosine_theta, sine_theta = CORDIC(theta)
@@ -47,9 +47,9 @@ def main(RED, GREEN, RESET):
         print(f"CORDIC -> Cosine : {cosine_theta}")
         print(f"CORDIC -> Sine : {sine_theta}\n")
 
-        print(f"{GREEN}Math Library Function Sanity Check{RESET}")
-        print(f"Math Library -> cosine : {cos(theta)}")
-        print(f"Math Library -> sine : {sin(theta)}\n")
+        print(f"{GREEN}Math Library Function{RESET}")
+        print(f"Math Library -> Cosine : {cos(theta)}")
+        print(f"Math Library -> Sine : {sin(theta)}\n")
 
     except ValueError:
         print(f"{RED}\nInvalid Value\n{RESET}")
