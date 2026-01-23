@@ -28,8 +28,8 @@ def CORDIC(theta):
         shift = 1 if theta >= 0 else -1
         xn = x - shift * y * (2 ** -i)
         yn = y + shift * x * (2 ** -i)
-        theta_n = theta - shift * atan_calc[i]
-        x, y, theta = xn, yn, theta_n
+        tn = theta - shift * atan_calc[i]
+        x, y, theta = xn, yn, tn
     return x, y
 
 def exit():
