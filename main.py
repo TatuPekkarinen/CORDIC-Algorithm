@@ -1,7 +1,7 @@
 from math import sqrt, atan, pi, cos, sin, radians
 import sys
 
-#the margin of error
+#the margin of error as epsilon
 epsilon = 1e-9
 
 RED = "\033[0;31m"
@@ -24,13 +24,14 @@ def C_GAIN(itr):
     return val
 
 def CORDIC(theta):
-    itr = 40
+    itr = 30
     v = v_v0()
     K = C_GAIN(itr)
     x = v.x * K
     y = v.y * K
 
     atan_calc = ATAN_CALC(itr)
+
     for i in range(itr):
         shift = 1 if theta >= 0 else -1
         xn = x - shift * y * (2 ** -i)
@@ -39,32 +40,54 @@ def CORDIC(theta):
         x, y, theta = xn, yn, tn
     return x, y
 
-def absolute_value(n):
-    if (n * -1) >= 0: return n * -1
-    else: return n
-
 #limit values so smaller than epsilon is just zero
-def epsilon_clamp(n):
-    if absolute_value(n) <= epsilon:
+def epsilon_round(n):
+    if abs(n) <= epsilon:
         return 0.0
     return n
 
 def main():
     try:
+        #asking for degrees because it feels more intuitive to then convert it to radians
         degree = float(input("Enter Angle In Degrees: "))
         theta = degree * (pi / 180)
-        cordic_cos, cordic_sin = CORDIC(theta)
+        theta = theta % (2 * pi)
+        library_theta = theta
 
-        cordic_cos = epsilon_clamp(cordic_cos)
-        cordic_sin = epsilon_clamp(cordic_sin)
+        #quadrant handling
+        cos_quad, sin_quad = 1, 1
+
+        if 0 <= theta <= pi / 2:
+            theta_0 = theta
+
+        elif (pi/2) < theta <= pi:
+            theta_0 = pi - theta
+            cos_quad, sin_quad = -1, 1
+
+        elif pi < theta <= 3*pi / 2:
+            theta_0 = theta - pi
+            cos_quad, sin_quad = -1, -1
+
+        else:
+            theta_0 = 2 * pi - theta
+            cos_quad, sin_quad = 1, -1
+
+        cordic_cos, cordic_sin = CORDIC(theta_0)
+
+        cordic_cos *= cos_quad
+        cordic_sin *= sin_quad
+
+        #round the zeroes out
+        cordic_cos = epsilon_round(cordic_cos)
+        cordic_sin = epsilon_round(cordic_sin)
 
         print(f"{GREEN}CORDIC Algorithm Values{RESET}")
-        print(f"CORDIC -> Cosine : {cordic_cos}")
-        print(f"CORDIC -> Sine : {cordic_sin}\n")
+        print(f"CORDIC -> Cosine : {cordic_cos: 10.10f} ")
+        print(f"CORDIC -> Sine : {cordic_sin: 10.10f} \n")
 
         print(f"{GREEN}Math Library Function{RESET}")
-        print(f"Math Library -> Cosine : {epsilon_clamp(cos(theta))}")
-        print(f"Math Library -> Sine : {epsilon_clamp(sin(theta))}\n")
+        print(f"Math Library -> Cosine : {epsilon_round(cos(library_theta)): 10.10f} ")
+        print(f"Math Library -> Sine : {epsilon_round(sin(library_theta)): 10.10f} \n")
 
     except ValueError:
         print(f"{RED}\nInvalid Value\n{RESET}")
