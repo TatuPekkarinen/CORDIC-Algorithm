@@ -1,5 +1,4 @@
 from math import sqrt, atan, pi, cos, sin, radians
-import matplotlib.pyplot as plt 
 import sys
 
 epsilon = 1e-9
@@ -11,15 +10,6 @@ class v_v0():
 
 def ATAN_CALC(iters):
     return [atan(2**-i) for i in range(iters)]
-
-def absolute_value(n):
-    if (n * -1) >= 0: return n * -1
-    else: return n
-
-def epsilon_clamp(n):
-    if absolute_value(n) < epsilon:
-        return 0.0
-    return n
 
 def C_GAIN(iters):
     val = 1.0
@@ -43,6 +33,17 @@ def CORDIC(theta):
         tn = theta - shift * atan_calc[i]
         x, y, theta = xn, yn, tn
     return x, y
+
+def absolute_value(n):
+    if (n * -1) >= 0:
+         return n * -1
+    else: 
+        return n
+
+def epsilon_clamp(n):
+    if absolute_value(n) < epsilon:
+        return 0.0
+    return n
 
 def main(RED, GREEN, RESET):
     try:
