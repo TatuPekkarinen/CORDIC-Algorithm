@@ -38,7 +38,7 @@ def CORDIC(theta):
         yn = y + shift * x * (2 ** -i)
         tn = theta - shift * atan_calc[i]
         x, y, theta = xn, yn, tn
-    return x, y
+    return epsilon_round(x), epsilon_round(y)
 
 #limit values so smaller than epsilon is just zero
 def epsilon_round(n):
@@ -49,7 +49,7 @@ def epsilon_round(n):
 def main():
     try:
         #asking for degrees because it feels more intuitive to then convert it to radians
-        degree = float(input("Enter Angle In Degrees: "))
+        degree = float(input("Enter Angle In Degrees : "))
         theta = degree * (pi / 180)
         theta = theta % (2 * pi)
         library_theta = theta
@@ -76,10 +76,6 @@ def main():
 
         cordic_cos *= cos_quad
         cordic_sin *= sin_quad
-
-        #round the zeroes out
-        cordic_cos = epsilon_round(cordic_cos)
-        cordic_sin = epsilon_round(cordic_sin)
 
         print(f"{GREEN}CORDIC Algorithm Values{RESET}")
         print(f"CORDIC -> Cosine : {cordic_cos: 10.10f} ")
