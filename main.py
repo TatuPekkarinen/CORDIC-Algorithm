@@ -1,4 +1,4 @@
-from math import sqrt, atan, pi, cos, sin, radians
+from math import sqrt, atan, pi, cos, sin
 import sys
 
 #the margin of error as epsilon
