@@ -33,10 +33,10 @@ def CORDIC(theta):
     atan_calc = ATAN_CALC(itr)
 
     for i in range(itr):
-        shift = 1 if theta >= 0 else -1
-        xn = x - shift * y * (2 ** -i)
-        yn = y + shift * x * (2 ** -i)
-        tn = theta - shift * atan_calc[i]
+        direction = 1 if theta >= 0 else -1
+        xn = x - direction * y * (2 ** -i)
+        yn = y + direction * x * (2 ** -i)
+        tn = theta - direction * atan_calc[i]
         x, y, theta = xn, yn, tn
     return epsilon_round(x), epsilon_round(y)
 
@@ -52,7 +52,7 @@ def main():
         degree = float(input("Enter Angle In Degrees : "))
         theta = degree * (pi / 180)
         theta = theta % (2 * pi)
-        library_theta = theta
+        lib_theta = theta
 
         #quadrant handling
         cos_quad, sin_quad = 1, 1
@@ -60,11 +60,11 @@ def main():
         if 0 <= theta <= pi / 2:
             theta_0 = theta
 
-        elif (pi/2) < theta <= pi:
+        elif pi / 2 < theta <= pi:
             theta_0 = pi - theta
             cos_quad, sin_quad = -1, 1
 
-        elif pi < theta <= 3*pi / 2:
+        elif pi < theta <= 3 * pi / 2:
             theta_0 = theta - pi
             cos_quad, sin_quad = -1, -1
 
@@ -77,13 +77,21 @@ def main():
         cordic_cos *= cos_quad
         cordic_sin *= sin_quad
 
+        lib_cos = epsilon_round(cos(lib_theta))
+        lib_sin = epsilon_round(sin(lib_theta))
+
         print(f"{GREEN}CORDIC Algorithm Values{RESET}")
         print(f"CORDIC -> Cosine : {cordic_cos: 10.10f} ")
         print(f"CORDIC -> Sine : {cordic_sin: 10.10f} \n")
 
         print(f"{GREEN}Math Library Function{RESET}")
-        print(f"Math Library -> Cosine : {epsilon_round(cos(library_theta)): 10.10f} ")
-        print(f"Math Library -> Sine : {epsilon_round(sin(library_theta)): 10.10f} \n")
+        print(f"Math Library -> Cosine : {lib_cos: 10.10f} ")
+        print(f"Math Library -> Sine : {lib_sin: 10.10f} \n")
+
+        print(f"{GREEN}Margin Of Error{RESET}")
+        print(f"Margin Of Error - Cosine : {abs(cordic_cos - lib_cos)}")
+        print(f"Margin Of Error - Sine : {abs(cordic_sin - lib_sin)}")
+        
 
     except ValueError:
         print(f"{RED}\nInvalid Value\n{RESET}")
