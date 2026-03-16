@@ -1,4 +1,6 @@
 from math import sqrt, atan, pi, cos, sin
+import matplotlib.pyplot as plt
+import numpy as np
 import sys
 
 #the margin of error as epsilon
@@ -46,52 +48,58 @@ def epsilon_round(n):
         return 0.0
     return n
 
+def plot(angle, ccos_val, csin_val):
+    plt.figure(figsize=(10,6))
+    plt.plot(angle, ccos_val, label="CORDIC.cos")
+    plt.plot(angle, csin_val, label="CORDIC.sin")
+    plt.legend()
+    plt.title("CORDIC-Algorithm")
+    plt.xlabel("(rad)")
+    plt.ylabel("(val)")
+
+    plt.grid(True)
+    plt.show()
+
 def main():
     try:
-        #asking for degrees because it feels more intuitive to then convert it to radians
-        degree = float(input("Enter Angle In Degrees : "))
-        theta = degree * (pi / 180)
-        theta = theta % (2 * pi)
-        lib_theta = theta
+        angle = np.linspace(0, 4*pi, 500)
 
-        #quadrant handling
-        cos_quad, sin_quad = 1, 1
+        ccos_val = []
+        csin_val = []
 
-        if 0 <= theta <= pi / 2:
-            theta_0 = theta
+        for theta in angle:
+            theta = theta % (2 * pi)
+            cos_quad, sin_quad = 1, 1
 
-        elif pi / 2 < theta <= pi:
-            theta_0 = pi - theta
-            cos_quad, sin_quad = -1, 1
+            if 0 <= theta <= pi / 2:
+                theta_0 = theta
 
-        elif pi < theta <= 3 * pi / 2:
-            theta_0 = theta - pi
-            cos_quad, sin_quad = -1, -1
+            elif pi / 2 < theta <= pi:
+                theta_0 = pi - theta
+                cos_quad, sin_quad = -1, 1
 
-        else:
-            theta_0 = 2 * pi - theta
-            cos_quad, sin_quad = 1, -1
+            elif pi < theta <= 3 * pi / 2:
+                theta_0 = theta - pi
+                cos_quad, sin_quad = -1, -1
 
-        cordic_cos, cordic_sin = CORDIC(theta_0)
+            else:
+                theta_0 = 2 * pi - theta
+                cos_quad, sin_quad = 1, -1
 
-        cordic_cos *= cos_quad
-        cordic_sin *= sin_quad
+            cordic_cos, cordic_sin = CORDIC(theta_0)
 
-        lib_cos = epsilon_round(cos(lib_theta))
-        lib_sin = epsilon_round(sin(lib_theta))
+            cordic_cos *= cos_quad
+            cordic_sin *= sin_quad
 
-        print(f"{GREEN}CORDIC Algorithm Values{RESET}")
-        print(f"CORDIC -> Cosine : {cordic_cos: 10.10f} ")
-        print(f"CORDIC -> Sine : {cordic_sin: 10.10f} \n")
+            lib_cos = epsilon_round(cos(theta))
+            lib_sin = epsilon_round(sin(theta))
 
-        print(f"{GREEN}Math Library Function{RESET}")
-        print(f"Math Library -> Cosine : {lib_cos: 10.10f} ")
-        print(f"Math Library -> Sine : {lib_sin: 10.10f} \n")
+            ccos_val.append(cordic_cos)
+            csin_val.append(cordic_sin)
 
-        print(f"{GREEN}Margin Of Error{RESET}")
-        print(f"Margin Of Error - Cosine : {abs(cordic_cos - lib_cos)}")
-        print(f"Margin Of Error - Sine : {abs(cordic_sin - lib_sin)}")
-        
+        print(f"{RED}MARGIN OF ERROR{RESET} (cos) -> {abs(cordic_cos - lib_cos)}")
+        print(f"{RED}MARGIN OF ERROR{RESET} (sin) -> {abs(cordic_sin - lib_sin)}")
+        plot(angle, ccos_val, csin_val)
 
     except ValueError:
         print(f"{RED}\nInvalid Value\n{RESET}")
