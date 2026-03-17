@@ -22,7 +22,7 @@ epsilon = 1e-9
 def ATAN_CALC(itr):
     return [atan(2**-i) for i in range(itr)]
 
-AC = ATAN_CALC(itr)
+ATAN_TB = ATAN_CALC(itr)
 
 #gain value as variable K
 def C_GAIN(itr):
@@ -40,10 +40,10 @@ def CORDIC(theta):
     y = v.y * K
 
     for i in range(itr):
-        direction = 1 if theta >= 0 else -1
-        xn = x - direction * y * (2 ** -i)
-        yn = y + direction * x * (2 ** -i)
-        tn = theta - direction * AC[i]
+        dir = 1 if theta >= 0 else -1
+        xn = x - dir * y * (2 ** -i)
+        yn = y + dir * x * (2 ** -i)
+        tn = theta - dir * ATAN_TB[i]
         x, y, theta = xn, yn, tn
     return epsilon_round(x), epsilon_round(y)
 
@@ -68,7 +68,8 @@ def plot(angle, ccos_val, csin_val):
 def main():
     try:
         angle = np.linspace(0, 4*pi, 500)
-
+        cos_error = []
+        sin_error = []
         ccos_val = []
         csin_val = []
 
@@ -99,11 +100,18 @@ def main():
             lib_cos = epsilon_round(cos(theta))
             lib_sin = epsilon_round(sin(theta))
 
+            cos_error.append(abs(cordic_cos - lib_cos))
+            sin_error.append(abs(cordic_sin - lib_sin))
+
             ccos_val.append(cordic_cos)
             csin_val.append(cordic_sin)
 
-        print(f"{RED}MARGIN OF ERROR{RESET} (cos) -> {abs(cordic_cos - lib_cos)}")
-        print(f"{RED}MARGIN OF ERROR{RESET} (sin) -> {abs(cordic_sin - lib_sin)}")
+        print(f"{RED}MAX ERROR{RESET} (cos) -> {max(cos_error)}")
+        print(f"{RED}MAX ERROR{RESET} (sin) -> {max(sin_error)}")
+
+        print(f"{RED}LAST ANGLE ERROR{RESET} (cos) -> {abs(cordic_cos - lib_cos)}")
+        print(f"{RED}LAST ANGLE ERROR{RESET} (sin) -> {abs(cordic_sin - lib_sin)}")
+
         plot(angle, ccos_val, csin_val)
 
     except ValueError:
@@ -111,10 +119,9 @@ def main():
         return
 
 if __name__ == "__main__":
-    print(f"{GREEN}CORDIC Algorithm{RESET}")
-    while True:
-        try: 
-            main()
-        except KeyboardInterrupt: 
-            print(f"\n{RED}KeyboardInterrupt{RESET}")
-            sys.exit(0)
+    print(f"\n{GREEN}CORDIC Algorithm{RESET}")
+    try: 
+        main()
+    except KeyboardInterrupt: 
+        print(f"\n{RED}KeyboardInterrupt{RESET}")
+        sys.exit(0)
