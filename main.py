@@ -3,9 +3,6 @@ import matplotlib.pyplot as plt
 import numpy as np
 import sys
 
-#the margin of error as epsilon
-epsilon = 1e-9
-
 RED = "\033[0;31m"
 GREEN = "\033[0;32m"
 RESET = '\033[0m'
@@ -15,9 +12,19 @@ class v_v0():
         self.x = 1.0
         self.y = 0.0
 
+#iterations 
+itr = 30
+
+#the margin of error as epsilon
+epsilon = 1e-9
+
+#microsteps lookuptable as variable AC
 def ATAN_CALC(itr):
     return [atan(2**-i) for i in range(itr)]
 
+AC = ATAN_CALC(itr)
+
+#gain value as variable K
 def C_GAIN(itr):
     val = 1.0
     for i in range(itr):
@@ -25,20 +32,18 @@ def C_GAIN(itr):
         val *= 1 / sqrt(1 + 2 ** (exp_2i))
     return val
 
+K = C_GAIN(itr)
+
 def CORDIC(theta):
-    itr = 30
     v = v_v0()
-    K = C_GAIN(itr)
     x = v.x * K
     y = v.y * K
-
-    atan_calc = ATAN_CALC(itr)
 
     for i in range(itr):
         direction = 1 if theta >= 0 else -1
         xn = x - direction * y * (2 ** -i)
         yn = y + direction * x * (2 ** -i)
-        tn = theta - direction * atan_calc[i]
+        tn = theta - direction * AC[i]
         x, y, theta = xn, yn, tn
     return epsilon_round(x), epsilon_round(y)
 
