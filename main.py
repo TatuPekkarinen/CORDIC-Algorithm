@@ -58,10 +58,9 @@ def plot(angle, ccos_val, csin_val):
     plt.plot(angle, ccos_val, label="CORDIC.cos")
     plt.plot(angle, csin_val, label="CORDIC.sin")
     plt.legend()
-    plt.title("CORDIC-Algorithm")
-    plt.xlabel("(rad)")
-    plt.ylabel("(val)")
-
+    plt.title("CORDIC-Algorithm / Approximation of sine & cosine")
+    plt.xlabel("rad")
+    plt.ylabel("val")
     plt.grid(True)
     plt.show()
 
@@ -106,12 +105,8 @@ def main():
             ccos_val.append(cordic_cos)
             csin_val.append(cordic_sin)
 
-        print(f"{RED}MAX ERROR{RESET} (cos) -> {max(cos_error)}")
-        print(f"{RED}MAX ERROR{RESET} (sin) -> {max(sin_error)}")
-
-        print(f"{RED}LAST ANGLE ERROR{RESET} (cos) -> {abs(cordic_cos - lib_cos)}")
-        print(f"{RED}LAST ANGLE ERROR{RESET} (sin) -> {abs(cordic_sin - lib_sin)}")
-
+        print(f"{RED}MAX ERROR{RESET} / cos <=> {max(cos_error)}")
+        print(f"{RED}MAX ERROR{RESET} / sin <=> {max(sin_error)}")
         plot(angle, ccos_val, csin_val)
 
     except ValueError:
