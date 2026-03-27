@@ -1,6 +1,7 @@
 from math import sqrt, atan, pi, cos, sin
 import matplotlib.pyplot as plt
 import numpy as np
+import time
 import sys
 
 RED = "\033[0;31m"
@@ -53,7 +54,9 @@ def epsilon_round(n):
         return 0.0
     return n
 
-def plot(angle, ccos_val, csin_val):
+def plot(angle, ccos_val, csin_val, cos_error, sin_error):
+
+    #figure for the CORDIC
     plt.figure(figsize=(10,6))
     plt.plot(angle, ccos_val, label="CORDIC.cos")
     plt.plot(angle, csin_val, label="CORDIC.sin")
@@ -61,14 +64,27 @@ def plot(angle, ccos_val, csin_val):
     plt.title("CORDIC-Algorithm / Approximation of sine & cosine")
     plt.xlabel("rad")
     plt.ylabel("val")
+
+    #plotted errors for each angle
+    plt.figure(figsize=(10,6))
+    plt.plot(cos_error, label="cosine")
+    plt.plot(sin_error, label="sine")
+    plt.legend()
+    plt.title("Error plot of the CORDIC-algorithm")
+    plt.xlabel("Rate")
+    plt.ylabel("Error magnitude")
+
     plt.grid(True)
     plt.show()
 
 def main():
     try:
-        angle = np.linspace(0, 4*pi, 500)
+        cordic_start = time.time()
+        angle = np.linspace(0, 8*pi, 128)
+
         cos_error = []
         sin_error = []
+
         ccos_val = []
         csin_val = []
 
@@ -105,9 +121,11 @@ def main():
             ccos_val.append(cordic_cos)
             csin_val.append(cordic_sin)
 
-        print(f"{RED}MAX ERROR{RESET} / cos <=> {max(cos_error)}")
-        print(f"{RED}MAX ERROR{RESET} / sin <=> {max(sin_error)}")
-        plot(angle, ccos_val, csin_val)
+        cordic_end = time.time()
+        print(f"{RED}TIME{RESET} / {cordic_end - cordic_start:.5f}s")
+        print(f"{RED}MAX ERROR{RESET} / {max(cos_error)}")
+        print(f"{RED}MAX ERROR{RESET} / {max(sin_error)}")
+        plot(angle, ccos_val, csin_val, cos_error, sin_error)
 
     except ValueError:
         print(f"{RED}\nInvalid Value\n{RESET}")
