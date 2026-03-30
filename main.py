@@ -64,17 +64,28 @@ def plot(angle, ccos_val, csin_val, cos_error, sin_error):
     plt.title("CORDIC-Algorithm / Approximation of sine & cosine")
     plt.xlabel("rad")
     plt.ylabel("val")
+    plt.grid(True)
 
-    #plotted errors for each angle
+    #error clusters in angles
+    plt.figure(figsize=(10,6))
+    plt.scatter(ccos_val, cos_error, label="cosine")
+    plt.scatter(csin_val, sin_error, label="sine")
+    plt.legend()
+    plt.title("Error points by the trigonometric function")
+    plt.xlabel("Rate")
+    plt.ylabel("Error magnitude")
+    plt.grid(True)
+
+    #general error plot
     plt.figure(figsize=(10,6))
     plt.plot(cos_error, label="cosine")
     plt.plot(sin_error, label="sine")
     plt.legend()
-    plt.title("Error plot of the CORDIC-algorithm")
-    plt.xlabel("Rate")
+    plt.title("General error plot of the CORDIC-algorithm")
+    plt.xlabel("Trigonometric function value")
     plt.ylabel("Error magnitude")
-
     plt.grid(True)
+
     plt.show()
 
 def main():
