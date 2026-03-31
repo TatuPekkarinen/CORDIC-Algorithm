@@ -54,7 +54,7 @@ def epsilon_round(n):
         return 0.0
     return n
 
-def plot(angle, ccos_val, csin_val, cos_error, sin_error):
+def plotting(angle, ccos_val, csin_val, cos_error, sin_error):
 
     #figure for the CORDIC
     plt.figure(figsize=(10,6))
@@ -68,12 +68,15 @@ def plot(angle, ccos_val, csin_val, cos_error, sin_error):
 
     #error clusters in angles
     plt.figure(figsize=(10,6))
-    plt.scatter(ccos_val, cos_error, label="cosine")
-    plt.scatter(csin_val, sin_error, label="sine")
-    plt.legend()
-    plt.title("Error points by the trigonometric function")
-    plt.xlabel("Rate")
-    plt.ylabel("Error magnitude")
+    plt.scatter(ccos_val, cos_error, label="cosine", s = 10, alpha = 0.5)
+    plt.scatter(csin_val, sin_error, label="sine", s = 10, alpha = 0.5)
+    plt.grid(True, linestyle='--', alpha=0.5)
+    plt.legend(frameon=True, shadow = True)
+    plt.title("Trigonometric Function Error")
+    plt.axhline(0, color='gray', linestyle='--', linewidth=1)
+    plt.xlabel("Angle")
+    plt.ylabel("Error Magnitude")
+
     plt.grid(True)
 
     #general error plot
@@ -91,7 +94,7 @@ def plot(angle, ccos_val, csin_val, cos_error, sin_error):
 def main():
     try:
         cordic_start = time.time()
-        angle = np.linspace(0, 8*pi, 128)
+        angle = np.linspace(0, 4*pi, 128)
 
         cos_error = []
         sin_error = []
@@ -136,7 +139,7 @@ def main():
         print(f"{RED}TIME{RESET} / {cordic_end - cordic_start:.5f}s")
         print(f"{RED}MAX ERROR{RESET} / {max(cos_error)}")
         print(f"{RED}MAX ERROR{RESET} / {max(sin_error)}")
-        plot(angle, ccos_val, csin_val, cos_error, sin_error)
+        plotting(angle, ccos_val, csin_val, cos_error, sin_error)
 
     except ValueError:
         print(f"{RED}\nInvalid Value\n{RESET}")
