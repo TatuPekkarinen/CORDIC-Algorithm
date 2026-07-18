@@ -41,10 +41,10 @@ def CORDIC(theta):
     y = v.y * K
 
     for i in range(itr):
-        dir = 1 if theta >= 0 else -1
-        xn = x - dir * y * (2 ** -i)
-        yn = y + dir * x * (2 ** -i)
-        tn = theta - dir * ATAN_TB[i]
+        direction = 1 if theta >= 0 else -1
+        xn = x - direction * y * (2 ** -i)
+        yn = y + direction * x * (2 ** -i)
+        tn = theta - direction * ATAN_TB[i]
         x, y, theta = xn, yn, tn
     return epsilon_round(x), epsilon_round(y)
 
